@@ -4,7 +4,7 @@ import os
 app = Flask(__name__)
 
 # 將你的 Channel Access Token 放這裡
-LINE_CHANNEL_ACCESS_TOKEN = 'LINE_CHANNEL_ACCESS_TOKEN'
+LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN')
 
 @app.route('/alert', methods=['POST'])
 def send_alert():

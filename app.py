@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import requests
-
+import os
 app = Flask(__name__)
 
 # 將你的 Channel Access Token 放這裡
@@ -38,4 +38,5 @@ def send_alert():
         return jsonify({'status': 'error', 'response': response.text}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Render 會提供 PORT
+    app.run(host='0.0.0.0', port=port)

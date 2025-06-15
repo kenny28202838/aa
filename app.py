@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN')
+LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('61Az0wfM526mnrQN2kabye473Ey3R8/8Y6TYJ2K5EiQt4roZDTWHnACGOCx/7oKOua7zIK4vHUuNOjFzaB9km2 LPSRTvHfYN744JvU/jwuuWsoVHTNh8rXfhXEAJZCmVGq4uoUJJGUaTLKeM7h5FPQdB04t89/1O/w1cDnyilFU=')
 
 @app.route('/webhook', methods=['POST'])
 def webhook():

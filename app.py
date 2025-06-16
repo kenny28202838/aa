@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 import requests
 import os
-
+import cv2
+from flask import Response, render_template_string
 app = Flask(__name__)
 
 LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN')
@@ -89,3 +90,38 @@ def send_alert():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+    
+# RTSP 串流網址（請用你自己的）
+RTSP_URL = "rtsp://kenny1231256:kenny28202838@192.168.0.101:554/stream1"
+
+# HTML 模板 - 網頁版畫面
+LIVE_HTML = """
+<!doctype html>
+<title>即時影像直播</title>
+<h2 style="text-align: center;">📡 即時監視畫面</h2>
+<div style="text-align: center;">
+  <img src="/video_feed" width="640" height="360">
+</div>
+"""
+
+# 直播網頁路由
+@app.route('/live')
+def live_page():
+    return render_template_string(LIVE_HTML)
+
+# MJPEG 串流路由
+def generate_frames():
+    cap = cv2.VideoCapture(RTSP_URL)
+    while True:
+        success, frame = cap.read()
+        if not success:
+            break
+        _, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
